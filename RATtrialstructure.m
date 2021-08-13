@@ -79,6 +79,10 @@ while 1
         Results{counter,9}=Trialtype;
         counter=counter+1;
         
+        % Draw Solution in the middle of the screen in Times in red
+        showSolution(design,Trialtype,Solution);
+        
+        
         break %
     end
     if keyIsDown
@@ -135,8 +139,14 @@ while 1
         Results{counter,8}=RecordTime;
         Results{counter,9}=Trialtype;
         counter=counter+1;
+        
+        
+        % Draw Solution in the middle of the screen in Times in red
+        showSolution(design,Trialtype,Solution);
+        
         break
     end
+    
     
     
 end
