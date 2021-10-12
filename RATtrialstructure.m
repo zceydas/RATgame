@@ -151,9 +151,10 @@ while 1
         Results{counter,9}=Trialtype;
         counter=counter+1;
         
-        
+        if contains(Trialtype,'Practice')
         % Draw Solution in the middle of the screen in Times in red
         showSolution(design,Trialtype,Solution);
+        end
         
         break
     end
