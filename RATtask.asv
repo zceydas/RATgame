@@ -34,8 +34,21 @@ rng('default')
 rng(design.subjectId)
 Counterbalance=perms([1 2 3]);
 
-ConditionList=AllList((AllList.TestDay==Counterbalance(mod(design.subjectId,6)+1,design.Session)),:);
+ConditionList=AllList((AllList.TestDay==1),:)
 
+if design.Session == 1 % if pre-test
+
+        ConditionList=AllList((AllList.TestDay==1),:); % give the 1st list
+elseif design.Session == 2 % if pre-test % if retest
+ if mod(design.subjectId,3) == 0 % if subject Id is an odd number
+        ConditionList=AllList((AllList.TestDay==2),:); % give the 1st list
+    elseif mod(design.subjectId,3) == 1
+        ConditionList=AllList((AllList.TestDay==1),:);
+    elseif mod(design.subjectId,3) == 2
+        ConditionList=AllList((AllList.TestDay==3),:);
+    end
+end
+   
 sessionorder=shuffle([1:size(ConditionList,1)]); % on each session 45 of them will be presented
 
 mic_image=imread('mic_image.png');
