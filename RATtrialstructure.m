@@ -1,11 +1,22 @@
 function [Results,counter]=RATtrialstructure(design,counter,Results,Solution,audiochannel,mic_image,t,Ex1,Ex2,Ex3,Trialtype)
+%EEG event codes:
+fixationstart=200;
+fixationend=201;
+ideacode=202;
+%%%%%%%%%%%%%%%%
 
 Screen('TextSize', design.window, design.fontsize);
 Screen('TextFont', design.window, 'Times');
 DrawFormattedText(design.window, '+', 'center',...
     design.screenYpixels * 0.55, design.grey);
 Screen('Flip', design.window);
+if design.runEEG
+    design.sp.sendTrigger(fixationstart)
+end
 WaitSecs(4+rand);
+if design.runEEG
+    design.sp.sendTrigger(fixationend)
+end
 
 ideacount=0;
 RT=0;
@@ -43,7 +54,7 @@ RecordTime=0; Recordall=0;
 while 1
     
     if design.runEEG
-        design.sp.sendTrigger(counter)
+        design.sp.sendTrigger(ideacode)
     end
     
     % idea generation
