@@ -11,6 +11,7 @@ Screen('Preference', 'SkipSyncTests', 1);
 design.trialdeadline=15; % in seconds (for idea generation)
 design.subjectId=input('What is subject ID?');
 design.Session=input('What is study session? Pre-Test(1), Test1(2), Test2(3): '); % this can be 1 or 2 (test and re-test)
+design.PharmList=input('What is pharmacy list? A or B: ', 's'); % the list type Pharmacy gave
 design.runEEG=input('Are you recording EEG? Yes(1), No(0): '); % this can be 1 or 2 (test and re-test)
 
 datafileName = ['RATtask_ID_' num2str(design.subjectId) '_SessionNo' num2str(design.Session) '_Data Folder'];
@@ -32,11 +33,26 @@ AllList=readtable('RATtrials.xlsx',opts, 'ReadVariableNames', true);
 
 rng('default')
 rng(design.subjectId)
-Counterbalance=perms([1 2 3]);
+%Counterbalance=perms([1 2 3]);
 
-ConditionList=AllList((AllList.TestDay==Counterbalance(mod(design.subjectId,6)+1,design.Session)),:);
+if design.Session == 1
+    ConditionList=AllList((AllList.TestDay==design.Session),:); % everyone gets the same list on pre-drug
+elseif design.Session == 2
+    if design.PharmList == 'A'
+        ConditionList=AllList((AllList.TestDay==2),:);
+    elseif design.PharmList == 'B'
+        ConditionList=AllList((AllList.TestDay==3),:);
+    end
+elseif design.Session == 3
+    if design.PharmList == 'B'
+        ConditionList=AllList((AllList.TestDay==2),:);
+    elseif design.PharmList == 'A'
+        ConditionList=AllList((AllList.TestDay==3),:);
+    end
+end
 
-sessionorder=shuffle([1:size(ConditionList,1)]); % on each session 45 of them will be presented
+
+sessionorder=Shuffle([1:size(ConditionList,1)]); % on each session 45 of them will be presented
 
 mic_image=imread('mic_image.png');
 baseRect = [0 0 200 200];
