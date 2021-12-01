@@ -1,15 +1,23 @@
 function [Results,counter]=RATtrialstructure(design,counter,Results,Solution,audiochannel,mic_image,t,Ex1,Ex2,Ex3,Trialtype)
+deviceNo=2;
 %EEG event codes:
 fixationstart=200;
 fixationend=201;
 ideacode=202;
+speakcode=203;
+lagtime=0.012;
+
 %%%%%%%%%%%%%%%%
+
 
 Screen('TextSize', design.window, design.fontsize);
 Screen('TextFont', design.window, 'Times');
 DrawFormattedText(design.window, '+', 'center',...
     design.screenYpixels * 0.55, design.grey);
+%Screen('FillRect', design.window, [255 255 255], [100 600 500 1000] )
 Screen('Flip', design.window);
+WaitSecs(lagtime)
+
 if design.runEEG
     design.sp.sendTrigger(fixationstart)
 end
@@ -22,46 +30,65 @@ ideacount=0;
 RT=0;
 
 % Draw text in the bottom of the screen in Times in blue
-Screen('TextSize', design.window, design.fontsize);
-Screen('TextFont', design.window, 'Times');
-DrawFormattedText(design.window, Ex1, 'center',...
-    design.screenYpixels * 0.45, [0 0 1]);
-
-% Draw text in the bottom of the screen in Times in blue
-Screen('TextSize', design.window, design.fontsize);
-Screen('TextFont', design.window, 'Times');
-DrawFormattedText(design.window, Ex2, 'center',...
-    design.screenYpixels * 0.55, [0 0 1]);
-
-% Draw text in the bottom of the screen in Times in blue
-Screen('TextSize', design.window, design.fontsize);
-Screen('TextFont', design.window, 'Times');
-DrawFormattedText(design.window, Ex3, 'center',...
-    design.screenYpixels * 0.65, [0 0 1]);
-
-if contains(Trialtype,'Practice')
-    Screen('TextSize', design.window, 35);
-    Screen('TextFont', design.window, 'Times');
-    DrawFormattedText(design.window, '(Once you are done reading, press the space bar)', 'center',...
-        design.screenYpixels * 0.90, design.grey);
-end
+% Screen('TextSize', design.window, design.fontsize);
+% Screen('TextFont', design.window, 'Times');
+% DrawFormattedText(design.window, Ex1, 'center',...
+%     design.screenYpixels * 0.45, [0 0 1]);
+% 
+% % Draw text in the bottom of the screen in Times in blue
+% Screen('TextSize', design.window, design.fontsize);
+% Screen('TextFont', design.window, 'Times');
+% DrawFormattedText(design.window, Ex2, 'center',...
+%     design.screenYpixels * 0.55, [0 0 1]);
+% 
+% % Draw text in the bottom of the screen in Times in blue
+% Screen('TextSize', design.window, design.fontsize);
+% Screen('TextFont', design.window, 'Times');
+% DrawFormattedText(design.window, Ex3, 'center',...
+%     design.screenYpixels * 0.65, [0 0 1]);
+% 
+% if contains(Trialtype,'Practice')
+%     Screen('TextSize', design.window, 35);
+%     Screen('TextFont', design.window, 'Times');
+%     DrawFormattedText(design.window, '(You have 3 seconds to read the words.)', 'center',...
+%         design.screenYpixels * 0.90, design.grey);
+% end
 
 % Flip to the screen
-Screen('Flip', design.window); ReadStart=GetSecs; WaitSecs(0.2);
-KbStrokeWait; Readit=GetSecs; ReadTime=Readit-ReadStart;
+%Screen('Flip', design.window); 
+ReadStart=GetSecs; %WaitSecs(0.2);
+%WaitSecs(3); 
+Readit=GetSecs; ReadTime=Readit-ReadStart;
 RecordTime=0; Recordall=0;
+
+if design.runEEG
+    design.sp.sendTrigger(ideacode)
+end
 
 while 1
     
-    if design.runEEG
-        design.sp.sendTrigger(ideacode)
-    end
-    
     % idea generation
+    %     Screen('TextSize', design.window, design.fontsize);
+    %     Screen('TextFont', design.window, 'Times');
+    %     DrawFormattedText(design.window, '+', 'center',...
+    %         design.screenYpixels * 0.55, design.grey);
+    % Draw text in the bottom of the screen in Times in blue
     Screen('TextSize', design.window, design.fontsize);
     Screen('TextFont', design.window, 'Times');
-    DrawFormattedText(design.window, '+', 'center',...
-        design.screenYpixels * 0.55, design.grey);
+    DrawFormattedText(design.window, Ex1, 'center',...
+        design.screenYpixels * 0.45, [0 0 1]);
+    
+    % Draw text in the bottom of the screen in Times in blue
+    Screen('TextSize', design.window, design.fontsize);
+    Screen('TextFont', design.window, 'Times');
+    DrawFormattedText(design.window, Ex2, 'center',...
+        design.screenYpixels * 0.55, [0 0 1]);
+    
+    % Draw text in the bottom of the screen in Times in blue
+    Screen('TextSize', design.window, design.fontsize);
+    Screen('TextFont', design.window, 'Times');
+    DrawFormattedText(design.window, Ex3, 'center',...
+        design.screenYpixels * 0.65, [0 0 1]);
     
     if contains(Trialtype,'Practice')
         Screen('TextSize', design.window, 35);
@@ -90,14 +117,17 @@ while 1
         Results{counter,9}=Trialtype;
         counter=counter+1;
         
-        % Draw Solution in the middle of the screen in Times in red
-        showSolution(design,Trialtype,Solution);
-        
+        if contains(Trialtype,'Practice')
+            % Draw Solution in the middle of the screen in Times in red
+            showSolution(design,Trialtype,Solution);
+        end
         
         break %
     end
     if keyIsDown
-        
+        if design.runEEG
+            design.sp.sendTrigger(speakcode)
+        end
         if ideacount == 0
             RT=GetSecs-Readit; % idea generation RT since the beginning of the first idea generation screen
         else
@@ -106,12 +136,12 @@ while 1
         
         % voice recording
         Screen(design.window,'PutImage',mic_image,design.allRects);
-        if contains(Trialtype,'Practice')
+     %   if contains(Trialtype,'Practice')
             Screen('TextSize', design.window, 35);
             Screen('TextFont', design.window, 'Times');
-            DrawFormattedText(design.window, '(Now say the name out loud as we record your voice.)', 'center',...
+            DrawFormattedText(design.window, '(Now say the name out loud and press space bar AGAIN when done.)', 'center',...
                 design.screenYpixels * 0.90, design.grey);
-        end
+    %    end
         
         Screen('Flip', design.window); RecordStart=GetSecs;
         ideacount=ideacount+1;
