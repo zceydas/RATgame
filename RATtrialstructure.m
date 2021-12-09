@@ -139,7 +139,7 @@ while 1
      %   if contains(Trialtype,'Practice')
             Screen('TextSize', design.window, 35);
             Screen('TextFont', design.window, 'Times');
-            DrawFormattedText(design.window, '(Now say the name out loud and press space bar AGAIN when done.)', 'center',...
+            DrawFormattedText(design.window, '(Now say the name out loud WHILE holding down the space bar.)', 'center',...
                 design.screenYpixels * 0.90, design.grey);
     %    end
         
@@ -150,7 +150,7 @@ while 1
         % we need to do the reverse of when we played a file
         % get the audio OUT of the buffer and into a matrix
         % then, save the matrix into a file
-        KbStrokeWait;
+        KbReleaseWait; 
         recordedaudio = PsychPortAudio('GetAudioData', audiochannel);
         % (at this point, since we've dumped things out of the buffer, we could
         % record another 10 seconds if we wanted to)
