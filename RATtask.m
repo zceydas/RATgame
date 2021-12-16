@@ -8,7 +8,7 @@ PsychDefaultSetup(2);
 Screen('Preference', 'SkipSyncTests', 1);
 %PsychDebugWindowConfiguration(0,0.5) % for debugging purposes
 
-design.trialdeadline=15; % in seconds (for idea generation)
+design.trialdeadline=30; % in seconds (for idea generation)
 design.subjectId=input('What is subject ID?');
 design.Session=input('What is study session? Pre-Test(1), Test1(2), Test2(3): '); % this can be 1 or 2 (test and re-test)
 design.PharmList=input('What is pharmacy list? A or B: ', 's'); % the list type Pharmacy gave
