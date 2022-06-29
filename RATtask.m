@@ -6,7 +6,7 @@ cd(directory)
 
 PsychDefaultSetup(2);
 Screen('Preference', 'SkipSyncTests', 1);
-PsychDebugWindowConfiguration(0,0.5) % for debugging purposes
+%PsychDebugWindowConfiguration(0,0.5) % for debugging purposes
 
 design.trialdeadline=30; % in seconds (for idea generation)
 design.subjectId=input('What is subject ID?');
