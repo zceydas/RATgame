@@ -6,7 +6,7 @@ fixationend=201;
 ideacode=202;
 speakcode=203;
 lagtime=0.012;
-
+insightcode=204;
 %%%%%%%%%%%%%%%%
 
 
@@ -34,19 +34,19 @@ RT=0;
 % Screen('TextFont', design.window, 'Times');
 % DrawFormattedText(design.window, Ex1, 'center',...
 %     design.screenYpixels * 0.45, [0 0 1]);
-% 
+%
 % % Draw text in the bottom of the screen in Times in blue
 % Screen('TextSize', design.window, design.fontsize);
 % Screen('TextFont', design.window, 'Times');
 % DrawFormattedText(design.window, Ex2, 'center',...
 %     design.screenYpixels * 0.55, [0 0 1]);
-% 
+%
 % % Draw text in the bottom of the screen in Times in blue
 % Screen('TextSize', design.window, design.fontsize);
 % Screen('TextFont', design.window, 'Times');
 % DrawFormattedText(design.window, Ex3, 'center',...
 %     design.screenYpixels * 0.65, [0 0 1]);
-% 
+%
 % if contains(Trialtype,'Practice')
 %     Screen('TextSize', design.window, 35);
 %     Screen('TextFont', design.window, 'Times');
@@ -55,9 +55,9 @@ RT=0;
 % end
 
 % Flip to the screen
-%Screen('Flip', design.window); 
+%Screen('Flip', design.window);
 ReadStart=GetSecs; %WaitSecs(0.2);
-%WaitSecs(3); 
+%WaitSecs(3);
 Readit=GetSecs; ReadTime=Readit-ReadStart;
 RecordTime=0; Recordall=0;
 
@@ -105,6 +105,18 @@ while 1
         else
             RT=GetSecs-RecordStopped;
         end
+        
+        if contains(Trialtype,'Practice')
+            % Draw Solution in the middle of the screen in Times in red
+            showSolution(design,Trialtype,Solution);
+        end
+        
+        WaitSecs(2);
+        if design.runEEG
+            design.sp.sendTrigger(insightcode)
+        end
+        InsightAnswer = Likert(design.window, [0 0 1], 'Did you feel on the verge of insight?', 'No insight', 'Insight', [0.8 0 0], 6, 'Unsure', [0.8 0.8 0.8],[0.8 0.8 0.8] );
+        
         % organize results
         Results{counter,1}=t;
         Results{counter,2}=Ex1;
@@ -115,12 +127,8 @@ while 1
         Results{counter,7}=RT;
         Results{counter,8}=0;
         Results{counter,9}=Trialtype;
+        Results{counter,10}=InsightAnswer;
         counter=counter+1;
-        
-        if contains(Trialtype,'Practice')
-            % Draw Solution in the middle of the screen in Times in red
-            showSolution(design,Trialtype,Solution);
-        end
         
         break %
     end
@@ -136,12 +144,12 @@ while 1
         
         % voice recording
         Screen(design.window,'PutImage',mic_image,design.allRects);
-     %   if contains(Trialtype,'Practice')
-            Screen('TextSize', design.window, 35);
-            Screen('TextFont', design.window, 'Times');
-            DrawFormattedText(design.window, '(Now say the name out loud WHILE holding down the space bar.)', 'center',...
-                design.screenYpixels * 0.90, design.grey);
-    %    end
+        %   if contains(Trialtype,'Practice')
+        Screen('TextSize', design.window, 35);
+        Screen('TextFont', design.window, 'Times');
+        DrawFormattedText(design.window, '(Now say the name out loud WHILE holding down the space bar.)', 'center',...
+            design.screenYpixels * 0.90, design.grey);
+        %    end
         
         Screen('Flip', design.window); RecordStart=GetSecs;
         ideacount=ideacount+1;
@@ -150,7 +158,7 @@ while 1
         % we need to do the reverse of when we played a file
         % get the audio OUT of the buffer and into a matrix
         % then, save the matrix into a file
-        KbReleaseWait; 
+        KbReleaseWait;
         recordedaudio = PsychPortAudio('GetAudioData', audiochannel);
         % (at this point, since we've dumped things out of the buffer, we could
         % record another 10 seconds if we wanted to)
@@ -169,6 +177,19 @@ while 1
         end
         
         
+        
+        
+        if contains(Trialtype,'Practice')
+            % Draw Solution in the middle of the screen in Times in red
+            showSolution(design,Trialtype,Solution);
+        end
+        WaitSecs(2);
+        if design.runEEG
+            design.sp.sendTrigger(insightcode)
+        end
+        InsightAnswer = Likert(design.window, [0 0 1], 'Did you feel a sense of insight?', 'No insight', 'Insight', [0.8 0 0], 6, 'Unsure', [0.8 0.8 0.8],[0.8 0.8 0.8] );
+        
+        
         % organize results
         Results{counter,1}=t;
         Results{counter,2}=Ex1;
@@ -179,12 +200,8 @@ while 1
         Results{counter,7}=RT;
         Results{counter,8}=RecordTime;
         Results{counter,9}=Trialtype;
+        Results{counter,10}=InsightAnswer;
         counter=counter+1;
-        
-        if contains(Trialtype,'Practice')
-        % Draw Solution in the middle of the screen in Times in red
-        showSolution(design,Trialtype,Solution);
-        end
         
         break
     end
