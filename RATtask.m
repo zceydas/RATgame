@@ -6,7 +6,7 @@ cd(directory)
 
 PsychDefaultSetup(2);
 Screen('Preference', 'SkipSyncTests', 1);
-%PsychDebugWindowConfiguration(0,0.5) % for debugging purposes
+PsychDebugWindowConfiguration(0,0.5) % for debugging purposes
 
 design.trialdeadline=30; % in seconds (for idea generation)
 design.subjectId=input('What is subject ID?');
@@ -114,7 +114,7 @@ for t=1:length(Index)
     design.fontsize=70;
    [Results,counter]=RATtrialstructure(design,counter,Results,Solution,audiochannel,mic_image,t,Ex1,Ex2,Ex3,Trialtype);
 end
-PracticeTable=cell2table(Results,'VariableNames',{'TrialNo' 'Example1' 'Example2' 'Example3' 'Solution' 'ReadTime' 'RT' 'Recordtime' 'TaskType'});
+PracticeTable=cell2table(Results,'VariableNames',{'TrialNo' 'Example1' 'Example2' 'Example3' 'Solution' 'ReadTime' 'RT' 'Recordtime' 'TaskType', 'Insight'});
 writetable(PracticeTable,['PracticeResults',num2str(design.Session),'_' 'subject',num2str(design.subjectId),'_',date,'.xlsx']);
 
 Screen('TextSize', design.window, 30);
