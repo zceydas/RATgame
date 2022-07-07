@@ -3,6 +3,7 @@ st = dbstack;
 namestr = st.name;
 directory=fileparts(which([namestr, '.m']));
 cd(directory)
+addpath(genpath([directory '/CogToolbox-master']));
 
 PsychDefaultSetup(2);
 Screen('Preference', 'SkipSyncTests', 1);
@@ -157,6 +158,9 @@ Screen('Flip',design.window); KbStrokeWait;
 if design.runEEG
     design.sp.sendTrigger(pauseOn)
 end
+
+rmpath([directory '/CogToolbox-master'])
+
 
 % Clear the screen
 sca;
