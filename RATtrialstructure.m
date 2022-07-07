@@ -116,6 +116,7 @@ while 1
         if design.runEEG
             design.sp.sendTrigger(insightcode)
         end
+        Screen('TextSize', design.window, 35)
         InsightAnswer = Likert(design.window, [0 0 1], 'Did you feel on the verge of insight?', 'No insight', 'Insight', [0.8 0 0], 6, 'Unsure', [0.8 0.8 0.8],[0.8 0.8 0.8] );
         
         % organize results
@@ -188,6 +189,7 @@ while 1
         if design.runEEG
             design.sp.sendTrigger(insightcode)
         end
+        
         InsightAnswer = Likert(design.window, [0 0 1], 'Did you feel a sense of insight?', 'No insight', 'Insight', [0.8 0 0], 6, 'Unsure', [0.8 0.8 0.8],[0.8 0.8 0.8] );
         
         

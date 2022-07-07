@@ -135,7 +135,7 @@ for t=1:length(sessionorder)
     design.fontsize=70;
     [Results,counter]=RATtrialstructure(design,counter,Results,Solution,audiochannel,mic_image,t,Ex1,Ex2,Ex3,Trialtype);
 end
-TestTable=cell2table(Results,'VariableNames',{'TrialNo' 'Example1' 'Example2' 'Example3' 'Solution' 'ReadTime' 'RT' 'Recordtime' 'TaskType'});
+TestTable=cell2table(Results,'VariableNames',{'TrialNo' 'Example1' 'Example2' 'Example3' 'Solution' 'ReadTime' 'RT' 'Recordtime' 'TaskType', 'Insight'});
 writetable(TestTable,['TestResults',num2str(design.Session),'_' 'subject',num2str(design.subjectId),'_',date,'.xlsx']);
 
 PsychPortAudio('Close', audiochannel);
