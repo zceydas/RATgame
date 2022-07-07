@@ -1,3 +1,4 @@
+
 function [Results,counter]=RATtrialstructure(design,counter,Results,Solution,audiochannel,mic_image,t,Ex1,Ex2,Ex3,Trialtype)
 deviceNo=2;
 %EEG event codes:
